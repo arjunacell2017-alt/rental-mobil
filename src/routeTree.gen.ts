@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArmadaRouteImport } from './routes/armada'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as KontakRouteImport } from './routes/kontak'
 import { Route as LayananRouteImport } from './routes/layanan'
 import { Route as PaketTourRouteImport } from './routes/paket-tour'
+import { Route as TentangRouteImport } from './routes/tentang'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,6 +32,11 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KontakRoute = KontakRouteImport.update({
+  id: '/kontak',
+  path: '/kontak',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LayananRoute = LayananRouteImport.update({
   id: '/layanan',
   path: '/layanan',
@@ -40,43 +47,78 @@ const PaketTourRoute = PaketTourRouteImport.update({
   path: '/paket-tour',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TentangRoute = TentangRouteImport.update({
+  id: '/tentang',
+  path: '/tentang',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/armada': typeof ArmadaRoute
   '/faq': typeof FaqRoute
+  '/kontak': typeof KontakRoute
   '/layanan': typeof LayananRoute
   '/paket-tour': typeof PaketTourRoute
+  '/tentang': typeof TentangRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/armada': typeof ArmadaRoute
   '/faq': typeof FaqRoute
+  '/kontak': typeof KontakRoute
   '/layanan': typeof LayananRoute
   '/paket-tour': typeof PaketTourRoute
+  '/tentang': typeof TentangRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/armada': typeof ArmadaRoute
   '/faq': typeof FaqRoute
+  '/kontak': typeof KontakRoute
   '/layanan': typeof LayananRoute
   '/paket-tour': typeof PaketTourRoute
+  '/tentang': typeof TentangRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/armada' | '/faq' | '/layanan' | '/paket-tour'
+  fullPaths:
+    | '/'
+    | '/armada'
+    | '/faq'
+    | '/kontak'
+    | '/layanan'
+    | '/paket-tour'
+    | '/tentang'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/armada' | '/faq' | '/layanan' | '/paket-tour'
-  id: '__root__' | '/' | '/armada' | '/faq' | '/layanan' | '/paket-tour'
+  to:
+    | '/'
+    | '/armada'
+    | '/faq'
+    | '/kontak'
+    | '/layanan'
+    | '/paket-tour'
+    | '/tentang'
+  id:
+    | '__root__'
+    | '/'
+    | '/armada'
+    | '/faq'
+    | '/kontak'
+    | '/layanan'
+    | '/paket-tour'
+    | '/tentang'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArmadaRoute: typeof ArmadaRoute
   FaqRoute: typeof FaqRoute
+  KontakRoute: typeof KontakRoute
   LayananRoute: typeof LayananRoute
   PaketTourRoute: typeof PaketTourRoute
+  TentangRoute: typeof TentangRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -102,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kontak': {
+      id: '/kontak'
+      path: '/kontak'
+      fullPath: '/kontak'
+      preLoaderRoute: typeof KontakRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/layanan': {
       id: '/layanan'
       path: '/layanan'
@@ -116,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaketTourRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tentang': {
+      id: '/tentang'
+      path: '/tentang'
+      fullPath: '/tentang'
+      preLoaderRoute: typeof TentangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -123,8 +179,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArmadaRoute: ArmadaRoute,
   FaqRoute: FaqRoute,
+  KontakRoute: KontakRoute,
   LayananRoute: LayananRoute,
   PaketTourRoute: PaketTourRoute,
+  TentangRoute: TentangRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
