@@ -14,16 +14,367 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      business_settings: {
+        Row: {
+          address_line1: string
+          address_line2: string
+          areas: string[]
+          created_at: string
+          default_whatsapp_message: string
+          description: string
+          id: string
+          instagram_handle: string
+          instagram_url: string
+          logo_url: string | null
+          name: string
+          operating_hours: string
+          singleton: boolean
+          tagline: string
+          updated_at: string
+          whatsapp_display: string
+          whatsapp_number: string
+        }
+        Insert: {
+          address_line1?: string
+          address_line2?: string
+          areas?: string[]
+          created_at?: string
+          default_whatsapp_message?: string
+          description?: string
+          id?: string
+          instagram_handle?: string
+          instagram_url?: string
+          logo_url?: string | null
+          name?: string
+          operating_hours?: string
+          singleton?: boolean
+          tagline?: string
+          updated_at?: string
+          whatsapp_display?: string
+          whatsapp_number?: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string
+          areas?: string[]
+          created_at?: string
+          default_whatsapp_message?: string
+          description?: string
+          id?: string
+          instagram_handle?: string
+          instagram_url?: string
+          logo_url?: string | null
+          name?: string
+          operating_hours?: string
+          singleton?: boolean
+          tagline?: string
+          updated_at?: string
+          whatsapp_display?: string
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
+      faqs: {
+        Row: {
+          answer: string
+          created_at: string
+          id: string
+          is_active: boolean
+          question: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          question: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          question?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          is_active: boolean
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          avatar_url: string | null
+          city: string
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          rating: number
+          review: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          city?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          rating?: number
+          review: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          city?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          rating?: number
+          review?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tour_packages: {
+        Row: {
+          created_at: string
+          description: string
+          destination: string
+          duration: string
+          highlight: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          price_from: number | null
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          destination?: string
+          duration?: string
+          highlight?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          price_from?: number | null
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          destination?: string
+          duration?: string
+          highlight?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          price_from?: number | null
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vehicle_images: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_images_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vehicles: {
+        Row: {
+          capacity: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          price_per_day: number | null
+          self_drive: boolean
+          slug: string
+          sort_order: number
+          transmission: string
+          updated_at: string
+          with_driver: boolean
+          year: number | null
+        }
+        Insert: {
+          capacity?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          price_per_day?: number | null
+          self_drive?: boolean
+          slug: string
+          sort_order?: number
+          transmission?: string
+          updated_at?: string
+          with_driver?: boolean
+          year?: number | null
+        }
+        Update: {
+          capacity?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          price_per_day?: number | null
+          self_drive?: boolean
+          slug?: string
+          sort_order?: number
+          transmission?: string
+          updated_at?: string
+          with_driver?: boolean
+          year?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_exists: { Args: never; Returns: boolean }
+      claim_first_admin: { Args: never; Returns: boolean }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +501,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
