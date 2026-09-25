@@ -26,7 +26,7 @@ export function BookingForm() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    window.open(wa(bookingMessage(form)), "_blank", "noopener");
+    window.open(wa(bookingMessage(form, business.name)), "_blank", "noopener");
   }
 
   return (

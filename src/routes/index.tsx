@@ -37,7 +37,7 @@ const trust = [
   "Melayani Luar Kota",
 ];
 
-const localBusinessJsonLd = {
+const buildJsonLd = (business: ReturnType<typeof useBusiness>) => ({
   "@context": "https://schema.org",
   "@type": "AutoRental",
   name: business.name,
@@ -53,7 +53,7 @@ const localBusinessJsonLd = {
   },
   areaServed: business.areas,
   sameAs: [business.instagramUrl],
-};
+});
 
 function Index() {
   const business = useBusiness();
@@ -63,7 +63,7 @@ function Index() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(business)) }}
       />
 
       <section className="bg-surface">
