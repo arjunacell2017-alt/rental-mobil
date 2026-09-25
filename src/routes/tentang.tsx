@@ -57,9 +57,11 @@ function TentangPage() {
       <Section muted title="Kenapa Memilih ARJUNA TRANS.ID?">
         <AdvantagesGrid />
       </Section>
+      {content.testimonials.length > 0 && (
       <Section title="Cerita Pelanggan">
         <TestimonialsGrid />
       </Section>
+      )}
       <BigCta />
     </>
   );

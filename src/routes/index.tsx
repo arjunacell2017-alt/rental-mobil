@@ -222,9 +222,11 @@ function Index() {
         </div>
       </Section>
 
+      {content.testimonials.length > 0 && (
       <Section muted title="Cerita Pelanggan">
         <TestimonialsGrid />
       </Section>
+      )}
 
       <Section title="Pertanyaan yang Sering Diajukan">
         <FaqAccordion limit={5} />

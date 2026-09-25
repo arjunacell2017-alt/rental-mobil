@@ -1,11 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { Check, MessageCircle, MapPin } from "lucide-react";
 import type { ReactNode } from "react";
-import { business, areaDetails } from "@/data/business";
-import { services, advantages } from "@/data/services";
-import { faqs } from "@/data/faq";
-import { testimonials } from "@/data/testimonials";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { areaDetails } from "@/data/business";
+import { advantages } from "@/data/services";
+import { useBusiness, useWa, useSiteContent, serviceIcons } from "@/lib/site-content";
+import { Car } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -44,11 +43,12 @@ export function Section({
 }
 
 export function ServicesGrid() {
+  const services = useSiteContent().services.map((s) => ({ ...s, icon: serviceIcons[s.icon] ?? Car }));
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {services.map((s) => (
         <div
-          key={s.title}
+          key={s.id}
           className="rounded-3xl border border-border bg-card p-6 shadow-soft transition-shadow hover:shadow-card"
         >
           <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-brand-soft text-primary">
@@ -65,10 +65,15 @@ export function ServicesGrid() {
 }
 
 export function AreaSection() {
+  const business = useBusiness();
+  const items = business.areas.map((name) => ({
+    name,
+    description: areaDetails.find((a) => a.name === name)?.description ?? "Melayani perjalanan dari dan ke area ini.",
+  }));
   return (
     <div>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {areaDetails.map((a) => (
+        {items.map((a) => (
           <div
             key={a.name}
             className="rounded-3xl border border-border bg-card p-6 shadow-soft"
@@ -110,13 +115,14 @@ export function AdvantagesGrid() {
 }
 
 export function TestimonialsGrid() {
+  const testimonials = useSiteContent().testimonials;
   return (
     <div>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {testimonials.map((t, i) => (
+        {testimonials.map((t) => (
           <figure
-            key={i}
-            className="rounded-3xl border border-dashed border-border bg-card p-6"
+            key={t.id}
+            className="rounded-3xl border border-border bg-card p-6"
           >
             <div className="text-sm text-brand" aria-label={`${t.rating} dari 5`}>
               {"★".repeat(t.rating)}
@@ -125,6 +131,9 @@ export function TestimonialsGrid() {
               {t.review}
             </blockquote>
             <figcaption className="mt-4 text-sm font-semibold text-primary">
+              {t.avatar_url && (
+                <img src={t.avatar_url} alt={t.name} loading="lazy" className="mb-2 size-10 rounded-full object-cover" />
+              )}
               {t.name}
               <span className="block font-normal text-muted-foreground">
                 {t.city}
@@ -133,15 +142,12 @@ export function TestimonialsGrid() {
           </figure>
         ))}
       </div>
-      <p className="mt-6 text-xs text-muted-foreground">
-        Bagian ini masih berisi konten contoh dan akan diganti dengan review
-        pelanggan asli.
-      </p>
     </div>
   );
 }
 
 export function FaqAccordion({ limit }: { limit?: number }) {
+  const faqs = useSiteContent().faqs.map((f) => ({ q: f.question, a: f.answer }));
   const items = limit ? faqs.slice(0, limit) : faqs;
   return (
     <Accordion type="single" collapsible className="w-full">
@@ -160,6 +166,8 @@ export function FaqAccordion({ limit }: { limit?: number }) {
 }
 
 export function BigCta() {
+  const business = useBusiness();
+  const wa = useWa();
   return (
     <section className="py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -172,7 +180,7 @@ export function BigCta() {
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <a
-              href={buildWhatsAppUrl()}
+              href={wa()}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-base font-semibold text-brand-foreground transition-all hover:brightness-95"
