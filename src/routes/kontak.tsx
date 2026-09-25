@@ -1,7 +1,6 @@
+import { useBusiness, useWa, useSiteContent } from "@/lib/site-content";
 import { createFileRoute } from "@tanstack/react-router";
 import { MessageCircle, Instagram, MapPin } from "lucide-react";
-import { business } from "@/data/business";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { BookingForm } from "@/components/booking-form";
 import { Section } from "@/components/sections";
 
@@ -22,6 +21,9 @@ export const Route = createFileRoute("/kontak")({
 });
 
 function KontakPage() {
+  const business = useBusiness();
+  const wa = useWa();
+  const content = useSiteContent();
   return (
     <Section
       title="Hubungi ARJUNA TRANS.ID"
@@ -30,7 +32,7 @@ function KontakPage() {
       <div className="grid gap-8 lg:grid-cols-2">
         <div className="space-y-4">
           <a
-            href={buildWhatsAppUrl()}
+            href={wa()}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-start gap-4 rounded-3xl border border-border bg-card p-6 shadow-soft transition-shadow hover:shadow-card"

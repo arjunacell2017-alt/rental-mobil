@@ -1,5 +1,5 @@
+import { useBusiness, useWa, useSiteContent } from "@/lib/site-content";
 import { createFileRoute } from "@tanstack/react-router";
-import { fleet } from "@/data/fleet";
 import { FleetCard } from "@/components/cards";
 import { Section, BigCta } from "@/components/sections";
 
@@ -20,6 +20,9 @@ export const Route = createFileRoute("/armada")({
 });
 
 function ArmadaPage() {
+  const business = useBusiness();
+  const wa = useWa();
+  const content = useSiteContent();
   return (
     <>
       <Section
@@ -27,7 +30,7 @@ function ArmadaPage() {
         subtitle="Temukan kendaraan yang sesuai untuk perjalanan pribadi, keluarga, bisnis, maupun rombongan. Harga dan ketersediaan dapat ditanyakan langsung melalui WhatsApp."
       >
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {fleet.map((item) => (
+          {content.vehicles.map((item) => (
             <FleetCard key={item.slug} item={item} />
           ))}
         </div>

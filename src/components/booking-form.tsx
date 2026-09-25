@@ -1,12 +1,15 @@
+import { useBusiness, useWa, useSiteContent } from "@/lib/site-content";
 import { useState, type FormEvent } from "react";
 import { MessageCircle } from "lucide-react";
-import { fleet } from "@/data/fleet";
-import { bookingMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
+import { bookingMessage } from "@/lib/whatsapp";
 
 const inputClass =
   "w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-brand focus:ring-2 focus:ring-brand/30";
 
 export function BookingForm() {
+  const business = useBusiness();
+  const wa = useWa();
+  const content = useSiteContent();
   const [form, setForm] = useState({
     nama: "",
     nomor: "",
@@ -23,7 +26,7 @@ export function BookingForm() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    window.open(buildWhatsAppUrl(bookingMessage(form)), "_blank", "noopener");
+    window.open(wa(bookingMessage(form, business.name)), "_blank", "noopener");
   }
 
   return (
@@ -101,7 +104,7 @@ export function BookingForm() {
             onChange={(e) => update("kendaraan", e.target.value)}
           >
             <option value="">Belum menentukan</option>
-            {fleet.map((f) => (
+            {content.vehicles.map((f) => (
               <option key={f.slug} value={f.name}>
                 {f.name}
               </option>

@@ -1,5 +1,5 @@
+import { useBusiness, useWa, useSiteContent } from "@/lib/site-content";
 import { createFileRoute } from "@tanstack/react-router";
-import { business } from "@/data/business";
 import { Section, AdvantagesGrid, TestimonialsGrid, BigCta } from "@/components/sections";
 
 const title = "Tentang ARJUNA TRANS.ID — Rental Mobil Purbalingga";
@@ -19,6 +19,9 @@ export const Route = createFileRoute("/tentang")({
 });
 
 function TentangPage() {
+  const business = useBusiness();
+  const wa = useWa();
+  const content = useSiteContent();
   return (
     <>
       <Section title="Partner Perjalanan Anda">
@@ -54,9 +57,11 @@ function TentangPage() {
       <Section muted title="Kenapa Memilih ARJUNA TRANS.ID?">
         <AdvantagesGrid />
       </Section>
+      {content.testimonials.length > 0 && (
       <Section title="Cerita Pelanggan">
         <TestimonialsGrid />
       </Section>
+      )}
       <BigCta />
     </>
   );

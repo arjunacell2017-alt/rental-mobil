@@ -1,5 +1,5 @@
+import { useBusiness, useWa, useSiteContent } from "@/lib/site-content";
 import { createFileRoute } from "@tanstack/react-router";
-import { tours } from "@/data/tours";
 import { TourCard } from "@/components/cards";
 import { Section, BigCta } from "@/components/sections";
 
@@ -20,6 +20,9 @@ export const Route = createFileRoute("/paket-tour")({
 });
 
 function TourPage() {
+  const business = useBusiness();
+  const wa = useWa();
+  const content = useSiteContent();
   return (
     <>
       <Section
@@ -27,7 +30,7 @@ function TourPage() {
         subtitle="Transportasi wisata untuk keluarga, pasangan, perusahaan, maupun rombongan. Itinerary dapat disesuaikan dengan kebutuhan Anda."
       >
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {tours.map((tour) => (
+          {content.tours.map((tour) => (
             <TourCard key={tour.slug} tour={tour} />
           ))}
         </div>

@@ -1,10 +1,3 @@
-import { business } from "@/data/business";
-
-export function buildWhatsAppUrl(message?: string) {
-  const text = encodeURIComponent(message ?? business.defaultWhatsAppMessage);
-  return `https://wa.me/${business.whatsappNumber}?text=${text}`;
-}
-
 export function bookingMessage(input: {
   nama: string;
   tanggal: string;
@@ -13,9 +6,9 @@ export function bookingMessage(input: {
   layanan: string;
   tujuan: string;
   nomor: string;
-}) {
+}, businessName = "ARJUNA TRANS.ID") {
   return [
-    "Halo ARJUNA TRANS.ID, saya ingin menanyakan rental mobil.",
+    `Halo ${businessName}, saya ingin menanyakan rental mobil.`,
     "",
     `Nama: ${input.nama || "-"}`,
     `Nomor WhatsApp: ${input.nomor || "-"}`,

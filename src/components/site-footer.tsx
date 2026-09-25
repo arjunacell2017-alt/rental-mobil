@@ -1,9 +1,10 @@
+import { useBusiness, useWa } from "@/lib/site-content";
 import { Link } from "@tanstack/react-router";
 import { Instagram, MessageCircle, MapPin } from "lucide-react";
-import { business } from "@/data/business";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 export function SiteFooter() {
+  const business = useBusiness();
+  const wa = useWa();
   return (
     <footer className="mt-20 border-t border-border bg-surface">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
@@ -68,7 +69,7 @@ export function SiteFooter() {
           <ul className="mt-3 space-y-3 text-sm text-muted-foreground">
             <li>
               <a
-                href={buildWhatsAppUrl()}
+                href={wa()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 hover:text-primary"
