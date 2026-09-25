@@ -1,10 +1,7 @@
+import { useBusiness, useWa, useSiteContent } from "@/lib/site-content";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessageCircle, Check } from "lucide-react";
 import heroCar from "@/assets/hero-car.jpg";
-import { business } from "@/data/business";
-import { fleet } from "@/data/fleet";
-import { tours } from "@/data/tours";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { BookingForm } from "@/components/booking-form";
 import { FleetCard, TourCard } from "@/components/cards";
 import {
@@ -59,6 +56,9 @@ const localBusinessJsonLd = {
 };
 
 function Index() {
+  const business = useBusiness();
+  const wa = useWa();
+  const content = useSiteContent();
   return (
     <>
       <script
@@ -85,7 +85,7 @@ function Index() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
-                href={buildWhatsAppUrl()}
+                href={wa()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-base font-semibold text-brand-foreground shadow-soft transition-all hover:brightness-95"
@@ -137,7 +137,7 @@ function Index() {
         subtitle="Temukan kendaraan yang sesuai untuk perjalanan pribadi, keluarga, bisnis, maupun rombongan."
       >
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {fleet.slice(0, 3).map((item) => (
+          {content.vehicles.slice(0, 3).map((item) => (
             <FleetCard key={item.slug} item={item} />
           ))}
         </div>
@@ -171,7 +171,7 @@ function Index() {
         subtitle="Perjalanan wisata untuk keluarga, pasangan, perusahaan, maupun rombongan."
       >
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {tours.slice(0, 3).map((tour) => (
+          {content.tours.slice(0, 3).map((tour) => (
             <TourCard key={tour.slug} tour={tour} />
           ))}
         </div>
