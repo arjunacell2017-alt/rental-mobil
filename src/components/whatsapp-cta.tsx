@@ -1,12 +1,13 @@
+import { useBusiness, useWa } from "@/lib/site-content";
 import { MessageCircle } from "lucide-react";
-import { business } from "@/data/business";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 export function WhatsAppFloating() {
+  const business = useBusiness();
+  const wa = useWa();
   return (
     <>
       <a
-        href={buildWhatsAppUrl()}
+        href={wa()}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Hubungi via WhatsApp"
@@ -17,7 +18,7 @@ export function WhatsAppFloating() {
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur md:hidden">
         <a
-          href={buildWhatsAppUrl()}
+          href={wa()}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-base font-semibold text-brand-foreground"

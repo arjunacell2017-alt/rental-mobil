@@ -1,8 +1,7 @@
+import { useBusiness, useWa } from "@/lib/site-content";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, X, MessageCircle } from "lucide-react";
-import { business } from "@/data/business";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 const nav = [
   { to: "/", label: "Beranda" },
@@ -15,6 +14,8 @@ const nav = [
 ] as const;
 
 export function SiteHeader() {
+  const business = useBusiness();
+  const wa = useWa();
   const [open, setOpen] = useState(false);
 
   return (
@@ -44,7 +45,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <a
-            href={buildWhatsAppUrl()}
+            href={wa()}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden items-center gap-2 rounded-full bg-brand px-4 py-2.5 text-sm font-semibold text-brand-foreground shadow-soft transition-all hover:brightness-95 sm:inline-flex"
@@ -80,7 +81,7 @@ export function SiteHeader() {
               </Link>
             ))}
             <a
-              href={buildWhatsAppUrl()}
+              href={wa()}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
