@@ -10,16 +10,31 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ArmadaRouteImport } from './routes/armada'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as KontakRouteImport } from './routes/kontak'
 import { Route as LayananRouteImport } from './routes/layanan'
 import { Route as PaketTourRouteImport } from './routes/paket-tour'
 import { Route as TentangRouteImport } from './routes/tentang'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminArmadaRouteImport } from './routes/admin.armada'
+import { Route as AdminFaqRouteImport } from './routes/admin.faq'
+import { Route as AdminLayananRouteImport } from './routes/admin.layanan'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminTestimonialRouteImport } from './routes/admin.testimonial'
+import { Route as AdminTourRouteImport } from './routes/admin.tour'
+import { Route as AdminLoginRouteImport } from './routes/admin_.login'
+import { Route as AdminSetupRouteImport } from './routes/admin_.setup'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArmadaRoute = ArmadaRouteImport.update({
@@ -52,15 +67,70 @@ const TentangRoute = TentangRouteImport.update({
   path: '/tentang',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminArmadaRoute = AdminArmadaRouteImport.update({
+  id: '/armada',
+  path: '/armada',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFaqRoute = AdminFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLayananRoute = AdminLayananRouteImport.update({
+  id: '/layanan',
+  path: '/layanan',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTestimonialRoute = AdminTestimonialRouteImport.update({
+  id: '/testimonial',
+  path: '/testimonial',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTourRoute = AdminTourRouteImport.update({
+  id: '/tour',
+  path: '/tour',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin_/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSetupRoute = AdminSetupRouteImport.update({
+  id: '/admin_/setup',
+  path: '/admin/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/armada': typeof ArmadaRoute
   '/faq': typeof FaqRoute
   '/kontak': typeof KontakRoute
   '/layanan': typeof LayananRoute
   '/paket-tour': typeof PaketTourRoute
   '/tentang': typeof TentangRoute
+  '/admin/armada': typeof AdminArmadaRoute
+  '/admin/faq': typeof AdminFaqRoute
+  '/admin/layanan': typeof AdminLayananRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/testimonial': typeof AdminTestimonialRoute
+  '/admin/tour': typeof AdminTourRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/setup': typeof AdminSetupRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,27 +140,56 @@ export interface FileRoutesByTo {
   '/layanan': typeof LayananRoute
   '/paket-tour': typeof PaketTourRoute
   '/tentang': typeof TentangRoute
+  '/admin/armada': typeof AdminArmadaRoute
+  '/admin/faq': typeof AdminFaqRoute
+  '/admin/layanan': typeof AdminLayananRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/testimonial': typeof AdminTestimonialRoute
+  '/admin/tour': typeof AdminTourRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/setup': typeof AdminSetupRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/armada': typeof ArmadaRoute
   '/faq': typeof FaqRoute
   '/kontak': typeof KontakRoute
   '/layanan': typeof LayananRoute
   '/paket-tour': typeof PaketTourRoute
   '/tentang': typeof TentangRoute
+  '/admin/armada': typeof AdminArmadaRoute
+  '/admin/faq': typeof AdminFaqRoute
+  '/admin/layanan': typeof AdminLayananRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/testimonial': typeof AdminTestimonialRoute
+  '/admin/tour': typeof AdminTourRoute
+  '/admin_/login': typeof AdminLoginRoute
+  '/admin_/setup': typeof AdminSetupRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/armada'
     | '/faq'
     | '/kontak'
     | '/layanan'
     | '/paket-tour'
     | '/tentang'
+    | '/admin/armada'
+    | '/admin/faq'
+    | '/admin/layanan'
+    | '/admin/settings'
+    | '/admin/testimonial'
+    | '/admin/tour'
+    | '/admin/login'
+    | '/admin/setup'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,25 +199,47 @@ export interface FileRouteTypes {
     | '/layanan'
     | '/paket-tour'
     | '/tentang'
+    | '/admin/armada'
+    | '/admin/faq'
+    | '/admin/layanan'
+    | '/admin/settings'
+    | '/admin/testimonial'
+    | '/admin/tour'
+    | '/admin/login'
+    | '/admin/setup'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/armada'
     | '/faq'
     | '/kontak'
     | '/layanan'
     | '/paket-tour'
     | '/tentang'
+    | '/admin/armada'
+    | '/admin/faq'
+    | '/admin/layanan'
+    | '/admin/settings'
+    | '/admin/testimonial'
+    | '/admin/tour'
+    | '/admin_/login'
+    | '/admin_/setup'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   ArmadaRoute: typeof ArmadaRoute
   FaqRoute: typeof FaqRoute
   KontakRoute: typeof KontakRoute
   LayananRoute: typeof LayananRoute
   PaketTourRoute: typeof PaketTourRoute
   TentangRoute: typeof TentangRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminSetupRoute: typeof AdminSetupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -128,6 +249,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/armada': {
@@ -172,17 +300,105 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TentangRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/armada': {
+      id: '/admin/armada'
+      path: '/armada'
+      fullPath: '/admin/armada'
+      preLoaderRoute: typeof AdminArmadaRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/faq': {
+      id: '/admin/faq'
+      path: '/faq'
+      fullPath: '/admin/faq'
+      preLoaderRoute: typeof AdminFaqRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/layanan': {
+      id: '/admin/layanan'
+      path: '/layanan'
+      fullPath: '/admin/layanan'
+      preLoaderRoute: typeof AdminLayananRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/testimonial': {
+      id: '/admin/testimonial'
+      path: '/testimonial'
+      fullPath: '/admin/testimonial'
+      preLoaderRoute: typeof AdminTestimonialRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tour': {
+      id: '/admin/tour'
+      path: '/tour'
+      fullPath: '/admin/tour'
+      preLoaderRoute: typeof AdminTourRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin_/login': {
+      id: '/admin_/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/setup': {
+      id: '/admin_/setup'
+      path: '/admin/setup'
+      fullPath: '/admin/setup'
+      preLoaderRoute: typeof AdminSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminArmadaRoute: typeof AdminArmadaRoute
+  AdminFaqRoute: typeof AdminFaqRoute
+  AdminLayananRoute: typeof AdminLayananRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminTestimonialRoute: typeof AdminTestimonialRoute
+  AdminTourRoute: typeof AdminTourRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminArmadaRoute: AdminArmadaRoute,
+  AdminFaqRoute: AdminFaqRoute,
+  AdminLayananRoute: AdminLayananRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminTestimonialRoute: AdminTestimonialRoute,
+  AdminTourRoute: AdminTourRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   ArmadaRoute: ArmadaRoute,
   FaqRoute: FaqRoute,
   KontakRoute: KontakRoute,
   LayananRoute: LayananRoute,
   PaketTourRoute: PaketTourRoute,
   TentangRoute: TentangRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminSetupRoute: AdminSetupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
