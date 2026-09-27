@@ -18,7 +18,8 @@ import {
 import { ImageInput } from "./image-input";
 import { uploadImage, removeImage, useImageUrl } from "@/lib/admin-media";
 
-type Row = Record<string, any> & { id: string };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Row = any;
 
 export type Field = {
   name: string;
@@ -76,7 +77,7 @@ export function CrudPage({
   const db = supabase.from(table as any) as any;
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<"all" | "active" | "inactive">("all");
-  const [editing, setEditing] = useState<Row | Record<string, any> | null>(null);
+  const [editing, setEditing] = useState<any>(null);
   const [files, setFiles] = useState<Record<string, File | null>>({});
   const [deleting, setDeleting] = useState<Row | null>(null);
 
@@ -105,8 +106,8 @@ export function CrudPage({
   }, [list.data, search, status, searchKeys, hasActive]);
 
   const save = useMutation({
-    mutationFn: async (values: Record<string, any>) => {
-      const payload: Record<string, any> = {};
+    mutationFn: async (values: any) => {
+      const payload: any = {};
       for (const f of fields) {
         let v = values[f.name];
         if (f.type === "number") v = v === "" || v == null ? null : Number(v);
@@ -180,7 +181,7 @@ export function CrudPage({
   });
 
   const set = (name: string, value: any) =>
-    setEditing((prev) => {
+    setEditing((prev: any) => {
       if (!prev) return prev;
       const next = { ...prev, [name]: value };
       for (const f of fields) {
