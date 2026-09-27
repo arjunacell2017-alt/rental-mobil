@@ -181,7 +181,7 @@ export function CrudPage({
   });
 
   const set = (name: string, value: any) =>
-    setEditing((prev) => {
+    setEditing((prev: any) => {
       if (!prev) return prev;
       const next = { ...prev, [name]: value };
       for (const f of fields) {
