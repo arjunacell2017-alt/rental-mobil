@@ -34,7 +34,8 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
     throw new Error("Konten website gagal dimuat");
   }
 
-  // Resolve storage paths to signed URLs (bucket is private but publicly readable via policy).
+  // Resolve storage paths to signed URLs. The bucket is private with no public
+  // read policy, so signed URLs are minted with the privileged server client.
   const paths = new Set<string>();
   const collect = (p: string | null | undefined) => {
     if (p && !/^https?:\/\//.test(p)) paths.add(p);
@@ -46,7 +47,8 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
   collect(settings.data?.logo_url);
   const urlMap = new Map<string, string>();
   if (paths.size) {
-    const { data } = await sb.storage.from("media").createSignedUrls([...paths], 60 * 60 * 24 * 7);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin.storage.from("media").createSignedUrls([...paths], 60 * 60 * 24 * 7);
     data?.forEach((d) => d.path && d.signedUrl && urlMap.set(d.path, d.signedUrl));
   }
   const resolve = (p: string | null | undefined) =>
