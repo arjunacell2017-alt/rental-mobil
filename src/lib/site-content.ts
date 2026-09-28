@@ -24,7 +24,8 @@ export type TourPackage = SiteContent["tours"][number];
 export const siteContentQuery = queryOptions({
   queryKey: ["site-content"],
   queryFn: () => getSiteContent(),
-  staleTime: 30_000,
+  staleTime: 0,
+  refetchOnWindowFocus: true,
 });
 
 export function useSiteContent() {
