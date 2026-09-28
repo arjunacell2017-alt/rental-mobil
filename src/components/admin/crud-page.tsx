@@ -31,6 +31,10 @@ export type Field = {
   options?: { value: string; label: string }[];
   slugFrom?: string;
   folder?: string;
+  /** Only render/save this field when the predicate returns true. */
+  showIf?: (values: Row) => boolean;
+  /** Not a column of the table; handled by afterSave. */
+  virtual?: boolean;
 };
 
 export type Column = { label: string; render: (row: Row) => ReactNode; className?: string };
@@ -60,6 +64,11 @@ export function CrudPage({
   sortable = true,
   hasActive = true,
   extraEdit,
+  selectQuery = "*",
+  extraFilters,
+  rowFilter,
+  beforeSave,
+  afterSave,
 }: {
   table: string;
   title: string;
@@ -72,6 +81,11 @@ export function CrudPage({
   sortable?: boolean;
   hasActive?: boolean;
   extraEdit?: (row: Row) => ReactNode;
+  selectQuery?: string;
+  extraFilters?: ReactNode;
+  rowFilter?: (row: Row) => boolean;
+  beforeSave?: (payload: Row, values: Row) => void;
+  afterSave?: (id: string, values: Row) => Promise<void>;
 }) {
   const qc = useQueryClient();
   const db = supabase.from(table as any) as any;
@@ -84,7 +98,7 @@ export function CrudPage({
   const list = useQuery({
     queryKey: ["admin", table],
     queryFn: async () => {
-      const { data, error } = await db.select("*").order("sort_order", { ascending: true }).order("created_at");
+      const { data, error } = await db.select(selectQuery).order("sort_order", { ascending: true }).order("created_at");
       if (error) throw error;
       return data as Row[];
     },
@@ -100,15 +114,17 @@ export function CrudPage({
     return (list.data ?? []).filter((r) => {
       if (hasActive && status === "active" && !r.is_active) return false;
       if (hasActive && status === "inactive" && r.is_active) return false;
+      if (rowFilter && !rowFilter(r)) return false;
       if (!q) return true;
       return searchKeys.some((k) => String(r[k] ?? "").toLowerCase().includes(q));
     });
-  }, [list.data, search, status, searchKeys, hasActive]);
+  }, [list.data, search, status, searchKeys, hasActive, rowFilter]);
 
   const save = useMutation({
     mutationFn: async (values: any) => {
       const payload: any = {};
       for (const f of fields) {
+        if (f.virtual || (f.showIf && !f.showIf(values))) continue;
         let v = values[f.name];
         if (f.type === "number") v = v === "" || v == null ? null : Number(v);
         if (f.type === "text" || f.type === "textarea" || f.type === "slug") v = (v ?? "").toString().trim();
@@ -125,15 +141,18 @@ export function CrudPage({
         payload[f.name] = v;
       }
       if (hasActive) payload.is_active = !!values.is_active;
+      beforeSave?.(payload, values);
       if (values.id) {
         const { error } = await db.update(payload).eq("id", values.id);
         if (error) throw error;
+        await afterSave?.(values.id, values);
       } else {
         if (sortable) {
           payload.sort_order = Math.max(0, ...(list.data ?? []).map((r) => r.sort_order ?? 0)) + 1;
         }
-        const { error } = await db.insert(payload);
+        const { data: created, error } = await db.insert(payload).select("id").single();
         if (error) throw error;
+        await afterSave?.(created.id, values);
       }
     },
     onSuccess: () => {
@@ -177,7 +196,8 @@ export function CrudPage({
       for (const f of fields) if (f.type === "image") await removeImage(row[f.name]);
     },
     onSuccess: () => { toast.success(`${singular} dihapus`); setDeleting(null); refresh(); },
-    onError: () => toast.error("Gagal menghapus"),
+    onError: (e: any) =>
+      toast.error(e?.code === "23503" ? "Tidak bisa dihapus karena masih terhubung dengan data lain. Nonaktifkan saja." : "Gagal menghapus"),
   });
 
   const set = (name: string, value: any) =>
@@ -220,6 +240,7 @@ export function CrudPage({
             <option value="inactive">Nonaktif</option>
           </select>
         )}
+        {extraFilters}
       </div>
 
       <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-card">
@@ -286,7 +307,7 @@ export function CrudPage({
               className="grid gap-4 sm:grid-cols-2"
               onSubmit={(e) => { e.preventDefault(); save.mutate(editing); }}
             >
-              {fields.map((f) => {
+              {fields.filter((f) => !f.showIf || f.showIf(editing)).map((f) => {
                 const full = f.type === "textarea" || f.type === "image";
                 return (
                   <div key={f.name} className={full ? "sm:col-span-2" : ""}>
