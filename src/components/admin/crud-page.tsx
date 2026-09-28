@@ -69,6 +69,7 @@ export function CrudPage({
   rowFilter,
   beforeSave,
   afterSave,
+  mapRow,
 }: {
   table: string;
   title: string;
@@ -86,6 +87,7 @@ export function CrudPage({
   rowFilter?: (row: Row) => boolean;
   beforeSave?: (payload: Row, values: Row) => void;
   afterSave?: (id: string, values: Row) => Promise<void>;
+  mapRow?: (row: Row) => Row;
 }) {
   const qc = useQueryClient();
   const db = supabase.from(table as any) as any;
@@ -100,7 +102,7 @@ export function CrudPage({
     queryFn: async () => {
       const { data, error } = await db.select(selectQuery).order("sort_order", { ascending: true }).order("created_at");
       if (error) throw error;
-      return data as Row[];
+      return (mapRow ? (data as Row[]).map(mapRow) : data) as Row[];
     },
   });
 
