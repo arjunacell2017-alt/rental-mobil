@@ -128,6 +128,48 @@ export type Database = {
         }
         Relationships: []
       }
+      partners: {
+        Row: {
+          address: string | null
+          business_name: string | null
+          city: string | null
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          phone: string
+          status: string
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          address?: string | null
+          business_name?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string
+          status?: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          address?: string | null
+          business_name?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string
+          status?: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           created_at: string
@@ -304,6 +346,35 @@ export type Database = {
           },
         ]
       }
+      vehicle_internal: {
+        Row: {
+          created_at: string
+          partner_cost: number | null
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string
+          partner_cost?: number | null
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string
+          partner_cost?: number | null
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_internal_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: true
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vehicles: {
         Row: {
           capacity: string
@@ -313,12 +384,15 @@ export type Database = {
           image_url: string | null
           is_active: boolean
           name: string
+          partner_id: string | null
           price_per_day: number | null
           self_drive: boolean
           slug: string
           sort_order: number
+          source_type: string
           transmission: string
           updated_at: string
+          vehicle_status: string
           with_driver: boolean
           year: number | null
         }
@@ -330,12 +404,15 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean
           name: string
+          partner_id?: string | null
           price_per_day?: number | null
           self_drive?: boolean
           slug: string
           sort_order?: number
+          source_type?: string
           transmission?: string
           updated_at?: string
+          vehicle_status?: string
           with_driver?: boolean
           year?: number | null
         }
@@ -347,16 +424,27 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean
           name?: string
+          partner_id?: string | null
           price_per_day?: number | null
           self_drive?: boolean
           slug?: string
           sort_order?: number
+          source_type?: string
           transmission?: string
           updated_at?: string
+          vehicle_status?: string
           with_driver?: boolean
           year?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "vehicles_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
