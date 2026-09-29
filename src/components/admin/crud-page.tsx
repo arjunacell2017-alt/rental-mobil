@@ -100,7 +100,7 @@ export function CrudPage({
   const list = useQuery({
     queryKey: ["admin", table],
     queryFn: async () => {
-      const { data, error } = await db.select(selectQuery).order("sort_order", { ascending: true }).order("created_at");
+      const { data, error } = await (sortable ? db.select(selectQuery).order("sort_order", { ascending: true }) : db.select(selectQuery)).order("created_at");
       if (error) throw error;
       return (mapRow ? (data as Row[]).map(mapRow) : data) as Row[];
     },

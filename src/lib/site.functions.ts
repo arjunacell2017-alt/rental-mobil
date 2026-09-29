@@ -21,7 +21,7 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
   const sb = publicClient();
   const [settings, vehicles, images, tours, services, faqs, testimonials] = await Promise.all([
     sb.from("business_settings").select("*").limit(1).maybeSingle(),
-    sb.from("vehicles").select("*").eq("is_active", true).order("sort_order").order("created_at"),
+    sb.from("vehicles").select("id, name, slug, image_url, price_per_day, capacity, transmission, year, with_driver, self_drive, description, is_active, sort_order, vehicle_status, created_at, updated_at").eq("is_active", true).order("sort_order").order("created_at"),
     sb.from("vehicle_images").select("id, vehicle_id, image_url, sort_order").order("sort_order"),
     sb.from("tour_packages").select("*").eq("is_active", true).order("sort_order").order("created_at"),
     sb.from("services").select("*").eq("is_active", true).order("sort_order"),
