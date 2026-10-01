@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Car, Map, HelpCircle, Globe, Loader2 } from "lucide-react";
+import { Car, Map, HelpCircle, Globe, Loader2, Home, Handshake, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/")({
@@ -11,17 +11,26 @@ function Dashboard() {
   const stats = useQuery({
     queryKey: ["admin", "stats"],
     queryFn: async () => {
-      const [v, t, f] = await Promise.all([
+      const c = (q: any) => q;
+      const [v, t, f, all, own, par, ap] = await Promise.all([
         supabase.from("vehicles").select("id", { count: "exact", head: true }).eq("is_active", true),
         supabase.from("tour_packages").select("id", { count: "exact", head: true }),
         supabase.from("faqs").select("id", { count: "exact", head: true }),
+        c(supabase.from("vehicles").select("id", { count: "exact", head: true })),
+        supabase.from("vehicles").select("id", { count: "exact", head: true }).eq("source_type", "own"),
+        supabase.from("vehicles").select("id", { count: "exact", head: true }).eq("source_type", "partner"),
+        supabase.from("partners").select("id", { count: "exact", head: true }).eq("status", "active"),
       ]);
-      if (v.error || t.error || f.error) throw new Error("gagal");
-      return { vehicles: v.count ?? 0, tours: t.count ?? 0, faqs: f.count ?? 0 };
+      if ([v, t, f, all, own, par, ap].some((r) => r.error)) throw new Error("gagal");
+      return { vehicles: v.count ?? 0, tours: t.count ?? 0, faqs: f.count ?? 0, total: all.count ?? 0, own: own.count ?? 0, partner: par.count ?? 0, activePartners: ap.count ?? 0 };
     },
   });
 
   const cards = [
+    { label: "Total armada", value: stats.data?.total, icon: Car, to: "/admin/armada" as const },
+    { label: "Armada milik sendiri", value: stats.data?.own, icon: Home, to: "/admin/armada" as const },
+    { label: "Armada partner", value: stats.data?.partner, icon: Users, to: "/admin/armada" as const },
+    { label: "Partner aktif", value: stats.data?.activePartners, icon: Handshake, to: "/admin/partners" as const },
     { label: "Armada aktif", value: stats.data?.vehicles, icon: Car, to: "/admin/armada" as const },
     { label: "Paket tour", value: stats.data?.tours, icon: Map, to: "/admin/tour" as const },
     { label: "FAQ", value: stats.data?.faqs, icon: HelpCircle, to: "/admin/faq" as const },
