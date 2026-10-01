@@ -84,7 +84,7 @@ export function CrudPage({
   extraEdit?: (row: Row) => ReactNode;
   selectQuery?: string;
   extraFilters?: ReactNode;
-  rowFilter?: (row: Row) => boolean;
+  rowFilter?: ((row: Row) => boolean) | undefined;
   beforeSave?: (payload: Row, values: Row) => void;
   afterSave?: (id: string, values: Row) => Promise<void>;
   mapRow?: (row: Row) => Row;
