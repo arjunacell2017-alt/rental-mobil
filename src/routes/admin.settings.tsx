@@ -10,13 +10,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ImageInput } from "@/components/admin/image-input";
 import { uploadImage, removeImage } from "@/lib/admin-media";
+import heroDefault from "@/assets/hero-car.jpg";
 
 export const Route = createFileRoute("/admin/settings")({ component: SettingsAdmin });
 
 type Form = {
   id?: string; name: string; tagline: string; whatsapp_number: string; whatsapp_display: string;
   instagram_handle: string; instagram_url: string; address_line1: string; address_line2: string;
-  areas: string; operating_hours: string; description: string; logo_url: string | null; default_whatsapp_message: string;
+  areas: string; operating_hours: string; description: string; logo_url: string | null; hero_image_url: string | null; default_whatsapp_message: string;
 };
 
 function toWaNumber(v: string) {
@@ -36,6 +37,7 @@ function SettingsAdmin() {
   });
   const [form, setForm] = useState<Form | null>(null);
   const [logo, setLogo] = useState<File | null>(null);
+  const [hero, setHero] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -55,6 +57,13 @@ function SettingsAdmin() {
         logo_url = await uploadImage(logo, "logo");
         if (q.data?.logo_url) await removeImage(q.data.logo_url);
       }
+      let hero_image_url = form.hero_image_url;
+      if (hero) {
+        hero_image_url = await uploadImage(hero, "hero");
+        if (q.data?.hero_image_url) await removeImage(q.data.hero_image_url);
+      } else if (!hero_image_url && q.data?.hero_image_url) {
+        await removeImage(q.data.hero_image_url);
+      }
       const payload = {
         name: form.name.trim(), tagline: form.tagline.trim(),
         whatsapp_display: form.whatsapp_display.trim(), whatsapp_number: toWaNumber(form.whatsapp_display),
@@ -62,14 +71,15 @@ function SettingsAdmin() {
         address_line1: form.address_line1.trim(), address_line2: form.address_line2.trim(),
         areas: form.areas.split("\n").map((a) => a.trim()).filter(Boolean),
         operating_hours: form.operating_hours.trim(), description: form.description.trim(),
-        default_whatsapp_message: form.default_whatsapp_message.trim(), logo_url,
+        default_whatsapp_message: form.default_whatsapp_message.trim(), logo_url, hero_image_url,
       };
       const { error } = form.id
         ? await supabase.from("business_settings").update(payload).eq("id", form.id)
         : await supabase.from("business_settings").insert(payload);
       if (error) throw error;
       setLogo(null);
-      toast.success("Pengaturan disimpan");
+      toast.success(hero ? "Foto hero berhasil diperbarui." : "Pengaturan disimpan");
+      setHero(null);
       qc.invalidateQueries({ queryKey: ["admin", "settings"] });
       qc.invalidateQueries({ queryKey: ["site-content"] });
     } catch (err: any) {
@@ -116,6 +126,11 @@ function SettingsAdmin() {
         <div className="sm:col-span-2">
           <Label className="mb-1.5 block">Deskripsi bisnis</Label>
           <Textarea rows={4} value={form.description} onChange={(e) => set("description", e.target.value)} />
+        </div>
+        <div className="sm:col-span-2">
+          <Label className="mb-1.5 block">Foto Hero Beranda</Label>
+          <ImageInput value={form.hero_image_url} file={hero} onFile={setHero} onClear={() => set("hero_image_url", null)} fallback={heroDefault} />
+          <p className="mt-1 text-xs text-muted-foreground">Foto besar di halaman Beranda. Kosongkan untuk memakai foto bawaan.</p>
         </div>
         <div className="sm:col-span-2">
           <Label className="mb-1.5 block">Logo</Label>

@@ -46,6 +46,7 @@ export type Database = {
           created_at: string
           default_whatsapp_message: string
           description: string
+          hero_image_url: string | null
           id: string
           instagram_handle: string
           instagram_url: string
@@ -65,6 +66,7 @@ export type Database = {
           created_at?: string
           default_whatsapp_message?: string
           description?: string
+          hero_image_url?: string | null
           id?: string
           instagram_handle?: string
           instagram_url?: string
@@ -84,6 +86,7 @@ export type Database = {
           created_at?: string
           default_whatsapp_message?: string
           description?: string
+          hero_image_url?: string | null
           id?: string
           instagram_handle?: string
           instagram_url?: string
