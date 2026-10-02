@@ -45,6 +45,7 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
   tours.data!.forEach((t) => collect(t.image_url));
   testimonials.data!.forEach((t) => collect(t.avatar_url));
   collect(settings.data?.logo_url);
+  collect(settings.data?.hero_image_url);
   const urlMap = new Map<string, string>();
   if (paths.size) {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -55,7 +56,7 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
     !p ? null : /^https?:\/\//.test(p) ? p : (urlMap.get(p) ?? null);
 
   return {
-    settings: settings.data ? { ...settings.data, logo_url: resolve(settings.data.logo_url) } : null,
+    settings: settings.data ? { ...settings.data, logo_url: resolve(settings.data.logo_url), hero_image_url: resolve(settings.data.hero_image_url) } : null,
     vehicles: vehicles.data!.map((v) => ({
       ...v,
       image_url: resolve(v.image_url),

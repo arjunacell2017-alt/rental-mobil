@@ -5,7 +5,7 @@ export const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const MAX_BYTES = 5 * 1024 * 1024;
 
 export function validateImage(file: File): string | null {
-  if (!ALLOWED_TYPES.includes(file.type)) return "Format harus JPG, JPEG, PNG, atau WEBP.";
+  if (!ALLOWED_TYPES.includes(file.type)) return "Format foto harus JPG, PNG, atau WEBP.";
   if (file.size > MAX_BYTES) return "Ukuran foto maksimal 5 MB.";
   return null;
 }
