@@ -115,7 +115,9 @@ function Index() {
 
           <div className="overflow-hidden rounded-4xl bg-card shadow-card">
             <img
-              src={heroCar}
+              key={content.settings?.hero_image_url ?? "default"}
+              src={content.settings?.hero_image_url || heroCar}
+              onError={(e) => { if (e.currentTarget.src !== heroCar) e.currentTarget.src = heroCar; }}
               alt="Mobil rental ARJUNA TRANS.ID yang bersih dan siap jalan"
               width={1600}
               height={1104}
