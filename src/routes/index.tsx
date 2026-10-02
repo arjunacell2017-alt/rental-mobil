@@ -117,7 +117,7 @@ function Index() {
             <img
               key={content.settings?.hero_image_url ?? "default"}
               src={content.settings?.hero_image_url || heroCar}
-              onError={(e) => { const img = e.currentTarget; if (!img.dataset.fallback) { img.dataset.fallback = "1"; img.src = heroCar; } }}
+              onError={(e) => { const img = e.currentTarget; if (!img.dataset["fallback"]) { img.dataset["fallback"] = "1"; img.src = heroCar; } }}
               alt="Mobil rental ARJUNA TRANS.ID yang bersih dan siap jalan"
               width={1600}
               height={1104}
