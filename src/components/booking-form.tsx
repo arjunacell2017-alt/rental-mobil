@@ -26,7 +26,11 @@ export function BookingForm() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    window.open(wa(bookingMessage(form, business.name)), "_blank", "noopener");
+    const url = wa(bookingMessage(form, business.name));
+    const win = window.open(url, "_blank", "noopener,noreferrer");
+    if (!win) {
+      try { (window.top ?? window).location.href = url; } catch { window.location.href = url; }
+    }
   }
 
   return (
