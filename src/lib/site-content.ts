@@ -51,12 +51,22 @@ export function useBusiness() {
   };
 }
 
+export function normalizeWhatsAppNumber(phone: string) {
+  const d = (phone ?? "").replace(/\D/g, "");
+  return d.startsWith("0") ? "62" + d.slice(1) : d;
+}
+
+export function buildWhatsAppUrl(phone: string, message?: string) {
+  const n = normalizeWhatsAppNumber(phone) || fallbackBusiness.whatsappNumber;
+  return message ? `https://wa.me/${n}?text=${encodeURIComponent(message)}` : `https://wa.me/${n}`;
+}
+
 export function useWa() {
   const b = useBusiness();
   return useCallback(
     (message?: string) =>
-      `https://wa.me/${b.whatsappNumber}?text=${encodeURIComponent(message ?? b.defaultWhatsAppMessage)}`,
-    [b.whatsappNumber, b.defaultWhatsAppMessage],
+      buildWhatsAppUrl(b.whatsappNumber || b.whatsappDisplay, message ?? b.defaultWhatsAppMessage),
+    [b.whatsappNumber, b.whatsappDisplay, b.defaultWhatsAppMessage],
   );
 }
 
