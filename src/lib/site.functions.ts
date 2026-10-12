@@ -2,9 +2,28 @@ import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
+// Server-side env resolution. Runtime vars (Netlify Functions / Workers) win;
+// the VITE_* values are public (URL + publishable key) and inlined at build time,
+// so they are a safe fallback. The service role key is NEVER read from VITE_*.
+function readPublicConfig() {
+  const url = process.env["SUPABASE_URL"] || import.meta.env["VITE_SUPABASE_URL"];
+  const key =
+    process.env["SUPABASE_PUBLISHABLE_KEY"] || import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+  const missing = [
+    ...(!url ? ["SUPABASE_URL (atau VITE_SUPABASE_URL saat build)"] : []),
+    ...(!key ? ["SUPABASE_PUBLISHABLE_KEY (atau VITE_SUPABASE_PUBLISHABLE_KEY saat build)"] : []),
+  ];
+  if (missing.length) {
+    const err = new Error(`Konfigurasi server belum lengkap: ${missing.join(", ")}`);
+    console.error("[site-content]", err);
+    throw err;
+  }
+  return { url: url as string, key: key as string };
+}
+
 function publicClient() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+  const { url, key } = readPublicConfig();
+  return createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
     global: {
       fetch: (input, init) => {
@@ -34,8 +53,9 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
     throw new Error("Konten website gagal dimuat");
   }
 
-  // Resolve storage paths to signed URLs. The bucket is private with no public
-  // read policy, so signed URLs are minted with the privileged server client.
+  // Storage bucket is private; signed URLs need the service role key, which only
+  // exists server-side. If it is missing (e.g. external host), text data still
+  // loads and images fall back — with an explicit log instead of a page crash.
   const paths = new Set<string>();
   const collect = (p: string | null | undefined) => {
     if (p && !/^https?:\/\//.test(p)) paths.add(p);
@@ -48,9 +68,22 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
   collect(settings.data?.hero_image_url);
   const urlMap = new Map<string, string>();
   if (paths.size) {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data } = await supabaseAdmin.storage.from("media").createSignedUrls([...paths], 60 * 60 * 24 * 7);
-    data?.forEach((d) => d.path && d.signedUrl && urlMap.set(d.path, d.signedUrl));
+    if (!process.env["SUPABASE_SERVICE_ROLE_KEY"]) {
+      console.error(
+        "[site-content] SUPABASE_SERVICE_ROLE_KEY tidak tersedia di server; foto dari Storage tidak bisa ditandatangani.",
+      );
+    } else {
+      try {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data, error } = await supabaseAdmin.storage
+          .from("media")
+          .createSignedUrls([...paths], 60 * 60 * 24 * 7);
+        if (error) console.error("[site-content] signed URL gagal", error);
+        data?.forEach((d) => d.path && d.signedUrl && urlMap.set(d.path, d.signedUrl));
+      } catch (e) {
+        console.error("[site-content] signed URL gagal", e);
+      }
+    }
   }
   const resolve = (p: string | null | undefined) =>
     !p ? null : /^https?:\/\//.test(p) ? p : (urlMap.get(p) ?? null);
