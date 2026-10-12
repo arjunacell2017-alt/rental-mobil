@@ -68,21 +68,19 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
   collect(settings.data?.hero_image_url);
   const urlMap = new Map<string, string>();
   if (paths.size) {
-    if (!process.env["SUPABASE_SERVICE_ROLE_KEY"]) {
-      console.error(
-        "[site-content] SUPABASE_SERVICE_ROLE_KEY tidak tersedia di server; foto dari Storage tidak bisa ditandatangani.",
-      );
-    } else {
-      try {
+    // Site photo folders are readable via a narrow storage policy, so the public
+    // client can sign them on any host (Netlify included). Admin client is only
+    // used when available as a secondary path.
+    try {
+      let { data, error } = await sb.storage.from("media").createSignedUrls([...paths], 60 * 60 * 24 * 7);
+      if ((error || !data?.some((d) => d.signedUrl)) && process.env["SUPABASE_SERVICE_ROLE_KEY"]) {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { data, error } = await supabaseAdmin.storage
-          .from("media")
-          .createSignedUrls([...paths], 60 * 60 * 24 * 7);
-        if (error) console.error("[site-content] signed URL gagal", error);
-        data?.forEach((d) => d.path && d.signedUrl && urlMap.set(d.path, d.signedUrl));
-      } catch (e) {
-        console.error("[site-content] signed URL gagal", e);
+        ({ data, error } = await supabaseAdmin.storage.from("media").createSignedUrls([...paths], 60 * 60 * 24 * 7));
       }
+      if (error) console.error("[site-content] signed URL gagal", error);
+      data?.forEach((d) => d.path && d.signedUrl && urlMap.set(d.path, d.signedUrl));
+    } catch (e) {
+      console.error("[site-content] signed URL gagal", e);
     }
   }
   const resolve = (p: string | null | undefined) =>

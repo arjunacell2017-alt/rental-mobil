@@ -1,0 +1,2 @@
+create policy "Public read site photos" on storage.objects for select to anon, authenticated
+using (bucket_id = 'media' and (storage.foldername(name))[1] in ('vehicles','hero','logo','tours','testimonials'));
